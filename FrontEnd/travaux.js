@@ -1,7 +1,13 @@
-const reponse = fetch("http://localhost:5678/api/works").then((travaux) => travaux.json());
-
+async function fetchWorks () {
+    const reponse = await fetch ('http://localhost:5678/api/works');
+    if (reponse.ok === true) {
+        return reponse.json();
+    }
+    throw new Error ('Connnexion impossible..')
+}
 
 function genererTravaux(travaux){
+    
     for(let i=0; i<=travaux.length; i++){
 
         //recup du travaux en cour de traitement par la boucle
@@ -13,6 +19,7 @@ function genererTravaux(travaux){
         //création des balises et attribution des valeurs associés
         const imgElement = document.createElement("img");
         imgElement.src = article.imageUrl;
+        imgElement.setAttribute("crossorigin", "anonymous");
         const titreElement = document.createElement("figcaption");
         titreElement.innerText = article.title;
 
@@ -23,4 +30,4 @@ function genererTravaux(travaux){
     }
 }
 
-genererTravaux(travaux);
+fetchWorks().then(works => genererTravaux(works));
