@@ -1,9 +1,20 @@
-async function fetchWorks () {
-    const reponse = await fetch ('http://localhost:5678/api/works');
-    if (reponse.ok === true) {
-        return reponse.json();
-    }
-    throw new Error ('Connnexion impossible..')
+(async function fetchWorks () {
+    await fetch ('http://localhost:5678/api/works')
+        .then(works => works.json())
+        .then(async (data) => {
+            genererTravaux(data);
+            const rep = await (await fetch ('http://localhost:5678/api/categories')).json();
+            console.log(rep);
+    }).catch(error => console.error(error));
+})();
+
+async function fetchWorksCategory() {
+    const rep = await fetch ('http://localhost:5678/api/categories');
+    const liste = await rep.json();
+
+    const listeCategory = liste.map(cat => cat.category);
+    console.log(listeCategory);
+    return listeCategory;
 }
 
 function genererTravaux(travaux){
@@ -30,4 +41,19 @@ function genererTravaux(travaux){
     }
 }
 
-fetchWorks().then(works => genererTravaux(works));
+
+
+const boutonObjet = document.querySelector(".objet") 
+
+boutonObjet.addEventListener("click", function(event){
+
+    event.preventDefault();
+
+    const setCat = new Set();
+    fetchWorksCategory().then(cat => cat.id === 1 ? setCat.add(cat.id) : "");
+    console.log(setCat);
+});
+
+fetchWorksCategory();
+
+
