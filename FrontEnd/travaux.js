@@ -67,7 +67,6 @@ function buttonFactory(listeCategories) {
 }
 
 
-buttonFactory();
 
 
 
