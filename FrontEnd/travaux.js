@@ -1,21 +1,33 @@
+let listCategory;
+
+//recup de tous les travaux
 (async function fetchWorks () {
     await fetch ('http://localhost:5678/api/works')
         .then(works => works.json())
         .then(async (data) => {
             genererTravaux(data);
-            const rep = await (await fetch ('http://localhost:5678/api/categories')).json();
-            console.log(rep);
-    }).catch(error => console.error(error));
+    })
+    .catch(error => console.error(error));
 })();
 
-async function fetchWorksCategory() {
-    const rep = await fetch ('http://localhost:5678/api/categories');
-    const liste = await rep.json();
+//recup des catégories de chaque travaux
+(async function fetchCat () {
+    await fetch ('http://localhost:5678/api/works')
+        .then(works => works.json())
+        .then(async (data) => {
+            listCategory = data.map(data => data.category);
+            buttonFactory(data);
+    })
+    .catch(error => console.error(error));
+})();
 
-    const listeCategory = liste.map(cat => cat.category);
-    console.log(listeCategory);
-    return listeCategory;
-}
+//recup des catégories définies (3 catégories en tout)
+(async function fetchWorksCategory() {
+    await fetch ('http://localhost:5678/api/categories')
+        .then(cat => cat.json())
+        .then(data => console.log(data))
+        .catch(error => console.log(error));
+})();
 
 function genererTravaux(travaux){
     
@@ -41,19 +53,21 @@ function genererTravaux(travaux){
     }
 }
 
+function buttonFactory(listeCategories) {
+    
+    //création du bouton 'tous'
+    const conteneurBtns = document.querySelector('#filtres');
+    const btnTous = document.createElement('button');
+    btnTous.innerText = "Tous";
+    conteneurBtns.appendChild(btnTous);
+
+    const catId = new Set(listCategory.map(idCategorie => idCategorie.name));
+    console.log(catId);
+
+}
 
 
-const boutonObjet = document.querySelector(".objet") 
+buttonFactory();
 
-boutonObjet.addEventListener("click", function(event){
-
-    event.preventDefault();
-
-    const setCat = new Set();
-    fetchWorksCategory().then(cat => cat.id === 1 ? setCat.add(cat.id) : "");
-    console.log(setCat);
-});
-
-fetchWorksCategory();
 
 
