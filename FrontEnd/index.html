@@ -10,20 +10,43 @@
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
 	<script src="travaux.js" defer></script>
+	<script src="https://kit.fontawesome.com/6b22252ea7.js" crossorigin="anonymous"></script>
 </head>
 <body>
+	<div class="bandeNoir">
+
+	</div>
 <header>
 	<h1>Sophie Bluel <span>Architecte d'inteérieur</span></h1>
 	<nav>
 		<ul>
 			<li>projets</li>
 			<li>contact</li>
-			<li>login</li>
+			<li class="loginU"><a class ="logOutIfIn" href="login.html">login</a></li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
 </header>
 <main>
+	<aside id="modal" class="modal" aria-hidden="true" role="dialog" style="display: none;">
+		<div class="modal-wrapper js-modal-stop">
+			<div class="icons-modal">
+				<button class="modal-back" style="visibility: hidden;"><i class="fa-solid fa-arrow-left"></i></button>
+				<button class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+			</div>
+			<div class="header-modal">
+			<p id="titre">Galerie photo</p>
+			</div>
+			<div class="formModal">
+				<div class="picturesPlacement">
+				</div>
+				<div class="method-modal">
+					<button class="ajout">Ajouter une photo</button>
+					<button class="suppression">Supprimer la galerie</button>
+				</div>
+			</div>
+		</div>
+	</aside>
 	<section id="introduction">
 		<figure>
 			<img src="./assets/images/sophie-bluel.png" alt="">
@@ -36,7 +59,7 @@
 		</article>
 	</section>
 	<section id="portfolio">
-		<h2>Mes Projets</h2>
+		<h2 class="titrePorto">Mes Projets</h2>
 		<form class="filtres" id="filtres">
 			
 		</form>
