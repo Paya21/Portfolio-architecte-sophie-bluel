@@ -250,6 +250,12 @@ if(sessionStorage.getItem('TokenAuth')){
                 catNum = 3;
             }
 
+            console.log(formData.get('photo'));
+            console.log(formData.get('titre'));
+            console.log(catNum);
+            console.log(sessionStorage.getItem('TokenAuth'));
+
+
             await fetch('http://localhost:5678/api/works'), {
                 method: 'POST',
                 headers: {
