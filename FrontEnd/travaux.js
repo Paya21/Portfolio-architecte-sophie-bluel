@@ -175,7 +175,7 @@ if(sessionStorage.getItem('TokenAuth')){
 
 (function ajoutPhoto(){
     const btnAjout = document.querySelector('.ajout');
-    btnAjout.addEventListener('click', function modalAjout(){
+    btnAjout.addEventListener('click', async function modalAjout(){
 
         const targetModalSuppr1 = document.querySelector('.header-modal');
         const targetModalSuppr2 = document.querySelector('.picturesPlacement');
@@ -183,6 +183,8 @@ if(sessionStorage.getItem('TokenAuth')){
         targetModalSuppr1.innerHTML = '';
         targetModalSuppr2.innerHTML = '';
         targetModalSuppr3.innerHTML = '';
+
+        
 
         document.querySelector('.fa-arrow-left').style.visibility = "visible";
 
@@ -199,46 +201,70 @@ if(sessionStorage.getItem('TokenAuth')){
         titreModal.innerText = "Ajout photo";
         targetTitreModal.appendChild(titreModal);
 
-        const targetContenuModal = document.querySelector('.picturesPlacement');
-        const divAjoutPhoto = document.createElement('div');
-        const btnAjoutPhoto = document.createElement('button');
-        const limitePhotoTxt = document.createElement('p');
-        btnAjoutPhoto.innerText = "Ajouter photo";
-        limitePhotoTxt.innerText = "jpg, png: 4mo max";
-        const titrePhoto = document.createElement('label');
-        titrePhoto.innerText = "Titre";
-        titrePhoto.id = "pseudo";
-        const inputTitrePhoto = document.createElement('input');
-        inputTitrePhoto.type = "text";
-        inputTitrePhoto.id = "pseudo";
+        const formModalTarget = document.querySelector('.method-modal');
+        const formModal = document.createElement('form');
+        formModal.classList.add('form-modal');
+        formModal.id = "formModal";
+        formModalTarget.appendChild(formModal);
 
-        const titreMenuCategories = document.createElement('p');
-        titreMenuCategories.innerText = "Catégorie";
+        const ajoutTravauxTarget = document.querySelector('.form-modal');
+        const btnChoixPhoto = document.createElement('input');
+        btnChoixPhoto.type = 'file';
+        btnChoixPhoto.name = 'photo';
+        const titrePhoto = document.createElement('input');
+        titrePhoto.type = 'text';
+        titrePhoto.name = 'titre';
+
         const menuCategories = document.createElement('select');
-        const cat1 = document.createElement('option');
-        const cat2 = document.createElement('option');
-        cat1.innerText = "Immeuble";
-        cat2.innerText = "Maison";
-        menuCategories.appendChild(cat1);
-        menuCategories.appendChild(cat2);
+        menuCategories.name = 'categorie'
+        await fetch ('http://localhost:5678/api/categories')
+            .then (rep1 => rep1.json())
+            .then (rep2 => {
+                for(i = 0; i < rep2.length; i++){
+                    const cat = document.createElement('option');
+                    cat.innerText = rep2[i].name;
+                    cat.id = rep2[i].id;
+                    menuCategories.appendChild(cat);
+                }
+            })
+            .catch(error => console.log(error));
 
-
-        const targetMethod = document.querySelector('.method-modal');
         const btnValider = document.createElement('button');
         btnValider.innerText = "Valider";
-        targetMethod.appendChild(btnValider);
-        
-        divAjoutPhoto.appendChild(btnAjoutPhoto);
-        divAjoutPhoto.appendChild(limitePhotoTxt);
-        targetContenuModal.appendChild(divAjoutPhoto);
-        targetContenuModal.appendChild(titrePhoto);
-        targetContenuModal.appendChild(inputTitrePhoto);
-        targetContenuModal.appendChild(titreMenuCategories);
-        targetContenuModal.appendChild(menuCategories);
-        // formModal.appendChild(targetContenuModal);
 
-        targetContenuModal.classList.remove('picturesPlacement');
-        divAjoutPhoto.classList.add('modal-ajout-photo');    
+        ajoutTravauxTarget.appendChild(btnChoixPhoto);
+        ajoutTravauxTarget.appendChild(titrePhoto);
+        ajoutTravauxTarget.appendChild(menuCategories);
+        ajoutTravauxTarget.appendChild(btnValider);
+        
+        formModal.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            var formData = new FormData(formModal);
+            
+            let catNum;
+            if (formData.get('categorie') == 'Objets'){
+                catNum = 1;
+            } else if(formData.get('categorie') == 'Appartements'){
+                catNum = 2;
+            } else if(formData.get('categorie') == 'Hotels & restaurants'){
+                catNum = 3;
+            }
+
+            await fetch('http://localhost:5678/api/works'), {
+                method: 'POST',
+                headers: {
+                    "Accept": "multipart/form-data",
+                    "Content-Type": "multipart/form-data",
+                    "Authorization": sessionStorage.getItem('TokenAuth')
+                },
+                body: JSON.stringify({
+                   "image": formData.get('photo'),
+                   "title": formData.get('titre'),
+                   "category": catNum
+                })
+            }
+            
+        })
     })
 })();
 

@@ -41,7 +41,7 @@ async function connect(idForm, mdpForm){
     const target = document.querySelector(".errorPlacement");
 
     if(reponse.status == 200){
-        window.location = "./index.html";     
+        window.location = "./index.html?token";     
     } else if (reponse.status == 404){
         target.innerHTML = "";
         const elementTarget = document.createElement("h2");
