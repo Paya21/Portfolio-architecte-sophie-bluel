@@ -36,7 +36,7 @@ function afficheTest(work, cat){
 
 function genererTravaux(travaux){
     
-    for(let i=0; i<=travaux.length; i++){
+    for(let i=0; i<travaux.length; i++){
 
         //recup du travaux en cour de traitement par la boucle
         const article = travaux[i];
@@ -80,9 +80,10 @@ function genererTravaux(travaux){
                 await fetch(`http://localhost:5678/api/works/${travaux[i].id}`, {
                     method: 'DELETE',
                     headers: {
-                        "Authorization": "Bearer" + sessionStorage.getItem('TokenAuth')
-                    }
-                })
+                        "Authorization": "Bearer " + sessionStorage.getItem('TokenAuth')
+                    },
+                    body: travaux[i].id
+                }).then((res) => console.log(res));
             })
         }
 
@@ -203,15 +204,38 @@ if(sessionStorage.getItem('TokenAuth')){
 
         
 
-        document.querySelector('.fa-arrow-left').style.visibility = "visible";
+        const retourGalleryModal = document.querySelector('.fa-arrow-left')
+        
+        retourGalleryModal.style.visibility = "visible";
+        retourGalleryModal.addEventListener('click', async () => {
+            
+            document.querySelector('.modal-wrapper').innerHTML="";
 
+            await fetch ('http://localhost:5678/api/works')
+            .then(reponse => reponse.json())
+            .then(data => {
+                for(i=0; i<data.length; i++){
+                    const targetModal = document.querySelector('.picturesPlacement');
+                    const modalElement = document.createElement('figure');
+                    const modalImg = document.createElement('img');
+                    modalImg.src = data.imageUrl;
+                    modalSupprUnit = document.createElement('button');
+                    modalSupprIcon = document.createElement('i');
+                    modalSupprIcon.classList.add('fa-solid');
+                    modalSupprIcon.classList.add('fa-trash-can');
+                    modalImg.setAttribute("crossorigin", "anonymous");
+                    const modalTxt =  document.createElement("figcaption");
+                    modalTxt.innerText = "éditer";
+                    modalSupprUnit.appendChild(modalSupprIcon);
+                    modalElement.appendChild(modalImg);
+                    modalElement.appendChild(modalSupprUnit);
+                    modalElement.appendChild(modalTxt);
+                    targetModal.appendChild(modalElement);
+            }
+        });
+    })  
+    
 
-        // const targetFormModal = document.querySelector('.icons-modal');
-        // const divFormModal = documment.createElement('div');
-        // const formModal = document.createElement('form');
-        // formModal.innerText = "yoyoyoyo";
-        // divFormModal.appendChild(formModal);
-        // targetFormModal.appendChild(divFormModal);
 
         const targetTitreModal = document.querySelector('.header-modal');
         const titreModal = document.createElement('p');
@@ -227,19 +251,20 @@ if(sessionStorage.getItem('TokenAuth')){
         const ajoutTravauxTarget = document.querySelector('.form-modal');
         const btnChoixPhoto = document.createElement('input');
         btnChoixPhoto.type = 'file';
-        btnChoixPhoto.name = 'photo';
+        btnChoixPhoto.name = 'image';
         const titrePhoto = document.createElement('input');
         titrePhoto.type = 'text';
-        titrePhoto.name = 'titre';
+        titrePhoto.name = 'title';
 
         const menuCategories = document.createElement('select');
-        menuCategories.name = 'categorie'
+        menuCategories.name = 'category'
         await fetch ('http://localhost:5678/api/categories')
             .then (rep1 => rep1.json())
             .then (rep2 => {
                 for(i = 0; i < rep2.length; i++){
                     const cat = document.createElement('option');
                     cat.innerText = rep2[i].name;
+                    cat.value = rep2[i].id;
                     menuCategories.appendChild(cat);
                 }
             })
@@ -253,39 +278,22 @@ if(sessionStorage.getItem('TokenAuth')){
         ajoutTravauxTarget.appendChild(menuCategories);
         ajoutTravauxTarget.appendChild(btnValider);
         
-        formModal.addEventListener('submit', async function(e){
+        formModal.addEventListener('submit', async (e) => {
             e.preventDefault();
             var formData = new FormData(formModal);
-            
-            let catNum;
-            if (formData.get('categorie') == 'Objets'){
-                catNum = 1;
-            } else if(formData.get('categorie') == 'Appartements'){
-                catNum = 2;
-            } else if(formData.get('categorie') == 'Hotels & restaurants'){
-                catNum = 3;
-            }
+            console.log(formData);
 
-            console.log(formData.get('photo'));
-            console.log(formData.get('titre'));
-            console.log(catNum);
-            console.log(sessionStorage.getItem('TokenAuth'));
-
-
-            await fetch('http://localhost:5678/api/works'), {
+            await fetch('http://localhost:5678/api/works', {
                 method: 'POST',
                 headers: {
-                    "Accept": "multipart/form-data",
-                    "Content-Type": "multipart/form-data",
-                    "Authorization": sessionStorage.getItem('TokenAuth')
+                    "Accept": "application/json",
+                    "Authorization": 'Bearer ' + sessionStorage.getItem('TokenAuth')
                 },
-                body: JSON.stringify({
-                   "image": formData.get('photo'),
-                   "title": formData.get('titre'),
-                   "category": catNum
+                body: formData,
+                }).then((res) => {
+                    console.log(res);
                 })
-            }  
-        })
+        })  
     })
 })();
 
