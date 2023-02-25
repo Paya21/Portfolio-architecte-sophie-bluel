@@ -76,6 +76,7 @@ function genererTravaux(travaux){
 
             modalSupprUnit.addEventListener('click', async (e) => {
                 console.log(travaux[i].id);
+                console.log(sessionStorage.getItem('TokenAuth'));
                 await fetch(`http://localhost:5678/api/works/${travaux[i].id}`, {
                     method: 'DELETE',
                     headers: {
