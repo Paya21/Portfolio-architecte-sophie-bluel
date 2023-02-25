@@ -150,13 +150,32 @@ if(sessionStorage.getItem('TokenAuth')){
     console.log("allleyyy");
     elementSimuLogOut = document.querySelector('.logOutIfIn');
     elementSimuLogOut.innerText = "logout";
+
+    const modifArchitect = document.querySelector('.sophie');
+    const divModifArchi = document.createElement('div');
+    divModifArchi.classList.add('modif-archi');
+    const logoModifArchi = document.createElement('i');
+    logoModifArchi.classList.add('fa-regular');
+    logoModifArchi.classList.add('fa-pen-to-square');
+    const txtModifArchi = document.createElement('p');
+    txtModifArchi.innerText = "Modifier";
+    divModifArchi.appendChild(logoModifArchi);
+    divModifArchi.appendChild(txtModifArchi);
+    modifArchitect.appendChild(divModifArchi);
     
     const bandeNoir = document.querySelector('.bandeNoir');
+    bandeNoir.style.display = "";
     bandeNoir.style.backgroundColor = "black";
     const txtBandeNoir = document.createElement('p');
     txtBandeNoir.innerText = "Mode édition";
     const divBandeNoir = document.createElement('button');
     divBandeNoir.innerText = "Publier les changements";
+    const logoBandeNoir = document.createElement('i');
+    logoBandeNoir.classList.add('fa-regular');
+    logoBandeNoir.classList.add('fa-pen-to-square');
+    logoBandeNoir.style.color = "white";
+    logoBandeNoir.style.marginRight = "10px"
+    bandeNoir.appendChild(logoBandeNoir);
     bandeNoir.appendChild(txtBandeNoir);
     bandeNoir.appendChild(divBandeNoir);
 
@@ -164,7 +183,16 @@ if(sessionStorage.getItem('TokenAuth')){
     boutonModif = document.createElement("a");
     boutonModif.innerText ="Modifier";
     boutonModif.href = "#modal";
-    modifBouton.appendChild(boutonModif);
+    boutonModif.classList.add('bouton-modif');
+    const logoBoutonModif = document.createElement('i');
+    logoBoutonModif.classList.add('fa-regular');
+    logoBoutonModif.classList.add('fa-pen-to-square');
+    logoBoutonModif.classList.add('logo-bouton-modif');
+    const divBoutonModif = document.createElement('div');
+    divBoutonModif.classList.add('div-bouton-modif');
+    divBoutonModif.appendChild(logoBoutonModif);
+    divBoutonModif.appendChild(boutonModif);
+    modifBouton.appendChild(divBoutonModif);
 
     let modal = null;
 

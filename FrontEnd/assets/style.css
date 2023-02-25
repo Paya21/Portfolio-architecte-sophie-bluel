@@ -481,3 +481,35 @@ footer nav ul {
 	align-items: center;
 }
 
+.modif-archi
+{
+	display: flex;
+	margin: auto;
+	width: 80%;
+	margin-top: 5px;
+}
+
+.modif-archi > i
+{
+	margin-right: 8px;
+}
+
+.bouton-modif
+{
+	text-decoration: none;
+	color: black;
+	font-size: 14px;
+}
+
+.logo-bouton-modif
+{
+	color: black;
+	font-size: 14px;
+	margin-right: 8px;
+}
+
+.div-bouton-modif
+{
+	display: flex;
+	margin-left: 15px;
+}
