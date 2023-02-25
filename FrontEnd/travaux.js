@@ -61,12 +61,28 @@ function genererTravaux(travaux){
             const modalElement = document.createElement('figure');
             const modalImg = document.createElement('img');
             modalImg.src = article.imageUrl;
+            modalSupprUnit = document.createElement('button');
+            modalSupprIcon = document.createElement('i');
+            modalSupprIcon.classList.add('fa-solid');
+            modalSupprIcon.classList.add('fa-trash-can');
             modalImg.setAttribute("crossorigin", "anonymous");
             const modalTxt =  document.createElement("figcaption");
             modalTxt.innerText = "éditer";
+            modalSupprUnit.appendChild(modalSupprIcon);
             modalElement.appendChild(modalImg);
+            modalElement.appendChild(modalSupprUnit);
             modalElement.appendChild(modalTxt);
             targetModal.appendChild(modalElement);
+
+            modalSupprUnit.addEventListener('click', async (e) => {
+                console.log(travaux[i].id);
+                await fetch(`http://localhost:5678/api/works/${travaux[i].id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        "Authorization": "Bearer" + sessionStorage.getItem('TokenAuth')
+                    }
+                })
+            })
         }
 
         const btnSuppr = document.querySelector('.suppression');
@@ -223,7 +239,6 @@ if(sessionStorage.getItem('TokenAuth')){
                 for(i = 0; i < rep2.length; i++){
                     const cat = document.createElement('option');
                     cat.innerText = rep2[i].name;
-                    cat.id = rep2[i].id;
                     menuCategories.appendChild(cat);
                 }
             })
@@ -237,7 +252,7 @@ if(sessionStorage.getItem('TokenAuth')){
         ajoutTravauxTarget.appendChild(menuCategories);
         ajoutTravauxTarget.appendChild(btnValider);
         
-        formModal.addEventListener('submit', async (e) => {
+        formModal.addEventListener('submit', async function(e){
             e.preventDefault();
             var formData = new FormData(formModal);
             
@@ -268,8 +283,7 @@ if(sessionStorage.getItem('TokenAuth')){
                    "title": formData.get('titre'),
                    "category": catNum
                 })
-            }
-            
+            }  
         })
     })
 })();
