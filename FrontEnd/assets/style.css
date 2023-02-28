@@ -383,12 +383,39 @@ footer nav ul {
 	border-radius: 10px;
 }
 
-.picturesPlacement > figure > img
+.imgModal1
 {
 	max-width: 85px;
 	width: 100%;
 	max-height: 120px;
 	height: 100%;
+}
+
+ .bouton-trash
+{
+	display: none;
+	position: absolute;
+	margin-right: 5px;
+	margin-top: 3px;
+	background-color: black;
+	border-style: none;
+	border-radius: 2px
+}
+
+.fa-trash-can
+{
+	color: white;
+}
+
+.div-image:hover > .bouton-trash
+{
+	display: block;
+} 
+
+.div-image
+{
+	display: flex;
+	justify-content: flex-end;
 }
 
 .picturesPlacement
@@ -417,7 +444,7 @@ footer nav ul {
 	font-size: 26px;
 }
 
-.method-modal
+/* .method-modal
 {
 	display: flex;
 	flex-direction: column;
@@ -425,7 +452,7 @@ footer nav ul {
 	margin-top: 60px;
 	border-top: 1px solid #b3b3b3;
 	padding-top: 50px;
-}
+} */
 
 .ajout
 {
@@ -512,4 +539,72 @@ footer nav ul {
 {
 	display: flex;
 	margin-left: 15px;
+}
+
+.divTitreCategory
+{
+	display: flex;
+	flex-direction: column;
+	margin-top: 10px;
+	margin-bottom: 10px
+}
+
+.divTitreCategory > input
+{
+	border-style: none;
+	border-radius: 0;
+	box-shadow: 0px 1px 4px 0px;
+	margin-bottom: 20px;
+	margin-top: 5px;
+	height: 30px;
+}
+
+.divTitreCategory > select
+{
+	background-color: white;
+	border-style: none;
+	box-shadow: 0px 1px 4px 0px;
+	height: 30px;
+	margin-top: 5px;
+	margin-bottom: 20px;
+}
+
+/* .inputPhoto
+{
+	background-color: #DFFBF5;
+	display: flex;
+	margin: auto;
+	height: 130px;
+	width: 100%;
+} */
+
+.form-submit
+{
+	display: flex;
+	margin: auto;
+	border-radius: 60px;
+	background-color: #1D6154;
+	border-style: none;
+	color: white;
+	width: 100px;
+	justify-content: center;
+	height: 30px;
+	align-items: center;
+}
+
+.div-submit-form
+{
+	border-top: 1px solid #b3b3b3;
+	padding-top: 50px;
+	margin-top: 25px;
+}
+
+.div-input-photo
+{
+	background-color: #DFFBF5;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	height: 130px;
+	width: 100%;
 }
