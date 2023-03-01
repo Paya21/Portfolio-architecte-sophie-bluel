@@ -375,12 +375,13 @@ footer nav ul {
 .modal-wrapper
 {
 	width: 40%;
-	/* height: 60%; */
+	max-height: 78%;
 	background-color: white;
 	display:flex;
 	flex-direction: column;
 	padding: 60px;
 	border-radius: 10px;
+	/* overflow: auto; */
 }
 
 .imgModal1
@@ -412,6 +413,16 @@ footer nav ul {
 	display: block;
 } 
 
+.div-image:hover > .btn-full-screen
+{
+	display: block;
+} 
+
+.bouton-trash:hover, .btn-full-screen:hover
+{
+	background-color: #1D6154;
+}
+
 .div-image
 {
 	display: flex;
@@ -427,6 +438,11 @@ footer nav ul {
 	justify-content: center;
  }
 
+ .picturesPlacement > figure
+ {
+	max-width: 85px;
+ }
+
 .header-modal > h3
 {
 	font-family: 'Syne', sans-serif;
@@ -440,7 +456,7 @@ footer nav ul {
 {
 	width: 100%;
 	text-align: center;
-	margin-bottom: 35px;
+	margin-bottom: 25px;
 	font-size: 26px;
 }
 
@@ -478,7 +494,7 @@ footer nav ul {
 {
 	display: flex;
 	justify-content: space-between;
-	margin-bottom: 20px;
+	margin-bottom: 15px;
 }
 
 .fa-arrow-left
@@ -553,9 +569,9 @@ footer nav ul {
 {
 	border-style: none;
 	border-radius: 0;
-	box-shadow: 0px 1px 4px 0px;
+	box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.19);
 	margin-bottom: 20px;
-	margin-top: 5px;
+	margin-top: 10px;
 	height: 30px;
 }
 
@@ -563,9 +579,9 @@ footer nav ul {
 {
 	background-color: white;
 	border-style: none;
-	box-shadow: 0px 1px 4px 0px;
+	box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.19);
 	height: 30px;
-	margin-top: 5px;
+	margin-top: 10px;
 	margin-bottom: 20px;
 }
 
@@ -599,12 +615,63 @@ footer nav ul {
 	margin-top: 25px;
 }
 
+.div-submit-form > div
+{
+	display: flex;
+	justify-content: center;
+	margin-top: 3px;
+}
+
 .div-input-photo
 {
-	background-color: #DFFBF5;
+	background-color: #E8F1F7;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	height: 130px;
+	justify-content: flex-end;
+	min-height: 130px;
 	width: 100%;
+}
+
+.div-input-photo > i
+{
+	color: #B9C5CC;
+	font-size: 50px;
+	margin-bottom: 5px;
+}
+
+.div-input-photo > button
+{
+	color: #306685;
+	background-color: #CBD6DC;
+	border-style: none;
+	border-radius: 50px;
+	width: 150px;
+	height: 30px;
+	font-family: 'Syne';
+}
+
+.div-input-photo > p
+{
+	margin-bottom: 15px;
+	font-size: 10px;
+	color: #444;
+	margin-top: 7px;
+}
+
+.div-input-photo > img
+{
+	max-height: 130px;
+}
+
+.btn-full-screen
+{
+	display: none;
+	position: absolute;
+	margin-right: 28px;
+	margin-top: 3px;
+	border-style: none;
+	background-color: black;
+	border-radius: 2px;
+	color: white;
 }
