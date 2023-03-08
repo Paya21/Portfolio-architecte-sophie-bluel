@@ -27,7 +27,7 @@ let listWork;
 })();
 
 
-async function galeryModal(article) {
+function galeryModal(article) {
 
     const targetModal = document.querySelector('.picturesPlacement');
     const modalElement = document.createElement('figure');
@@ -49,39 +49,6 @@ async function galeryModal(article) {
     modalImg.setAttribute("crossorigin", "anonymous");
     const modalTxt = document.createElement("figcaption");
     modalTxt.innerText = "éditer";
-    const targetMethod = document.querySelector('.method-modal');
-        const ajoutPic = document.createElement('button');
-        ajoutPic.classList.add("ajout");
-        ajoutPic.innerText = "Ajouter une photo";
-        targetMethod.appendChild(ajoutPic);
-        
-
-        const supprGal = document.createElement('button');
-        supprGal.classList.add('suppression');
-        supprGal.innerText = "Supprimer la galerie";
-        targetMethod.appendChild(supprGal);
-
-        const fetchRetour = await fetch('http://localhost:5678/api/works');
-
-        const article = await fetchRetour.json();
-
-
-        for (i = 0; i < article.length; i++) {
-            galeryModal(article[i]);
-        }
-
-        modalSupprUnit.addEventListener('click', async (e) => {
-
-            await fetch(`http://localhost:5678/api/works/${travaux[i].id}`, {
-                method: 'DELETE',
-                headers: {
-                    "Authorization": "Bearer " + sessionStorage.getItem('TokenAuth')
-                },
-                body: travaux[i].id
-            }).then((res) => console.log(res));
-
-            location.reload();
-        })
     modalSupprUnit.appendChild(modalSupprIcon);
     modalFullScreenUnit.appendChild(modalFullScreenIcon);
     divBtnImage.appendChild(modalFullScreenUnit);
@@ -90,7 +57,6 @@ async function galeryModal(article) {
     modalElement.appendChild(divBtnImage)
     modalElement.appendChild(modalTxt);
     targetModal.appendChild(modalElement);
-
 }
 
 function genererTravaux(travaux) {
@@ -277,6 +243,7 @@ btnAjout.addEventListener('click', async function modalAjout() {
     targetModalSuppr3.innerHTML = '';
 
     const retourGalleryModal = document.querySelector('.fa-arrow-left')
+
     retourGalleryModal.style.visibility = "visible";
     retourGalleryModal.addEventListener('click', async (e) => {
 
@@ -302,12 +269,45 @@ btnAjout.addEventListener('click', async function modalAjout() {
         methodReplacement.style.borderTop = "1px solid #b3b3b3";
         methodReplacement.style.paddingTop = "50px";
 
-        ajoutPic.addEventListener('click', modalAjout);
-
         const headTarget = document.querySelector('.header-modal');
         const headTitle = document.createElement('p');
         headTitle.innerText = "Galerie photo";
         headTarget.appendChild(headTitle);
+
+        const targetMethod = document.querySelector('.method-modal');
+        const ajoutPic = document.createElement('button');
+        ajoutPic.classList.add("ajout");
+        ajoutPic.innerText = "Ajouter une photo";
+        targetMethod.appendChild(ajoutPic);
+        ajoutPic.addEventListener('click', modalAjout);
+
+        const supprGal = document.createElement('button');
+        supprGal.classList.add('suppression');
+        supprGal.innerText = "Supprimer la galerie";
+        targetMethod.appendChild(supprGal);
+
+        const fetchRetour = await fetch('http://localhost:5678/api/works');
+
+        const article = await fetchRetour.json();
+
+        console.log(article);
+
+        for (i = 0; i < article.length; i++) {
+            galeryModal(article[i]);
+        }
+
+        modalSupprUnit.addEventListener('click', async (e) => {
+
+            await fetch(`http://localhost:5678/api/works/${travaux[i].id}`, {
+                method: 'DELETE',
+                headers: {
+                    "Authorization": "Bearer " + sessionStorage.getItem('TokenAuth')
+                },
+                body: travaux[i].id
+            }).then((res) => console.log(res));
+
+            location.reload();
+        })
 
     })
 
