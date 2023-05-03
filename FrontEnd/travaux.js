@@ -21,15 +21,57 @@ let listWork;
         })
         .catch(error => console.log(error));
 
-    //appel fonction test et génération des travaux
+    //appel fonction génération des travaux
 
     genererTravaux(listWork);
 })();
 
+//ajout du listener pour modal ajout travaux et verif sur click bouton
+document.addEventListener('click', (e) =>  {
+    if(e.target.id === "ajout"){
+        modalAjout();
+    }
+})
 
-function galeryModal(article) {
+function galeryModalHome(){
+    //création du header
+    const headerTarget = document.querySelector('.header-modal');
+    const headerTitle = document.createElement('p');
+    headerTitle.innerText = "Galerie Photo";
 
-    const targetModal = document.querySelector('.picturesPlacement');
+    //création du btn ajout travaux et suppr galerie
+    //ciblage
+    const methodTarget = document.querySelector('.method-modal');
+    //style method modal
+    methodTarget.style.display = "flex";
+    methodTarget.style.flexDirection = "column";
+    methodTarget.style.alignItems = "center";
+    methodTarget.style.borderTop = "1px solid #b3b3b3";
+    methodTarget.style.marginTop = "60px";
+    methodTarget.style.paddingTop = "50px";
+    //bouton ajout
+    const btnAjout = document.createElement('button');
+    btnAjout.id = "ajout";
+    btnAjout.classList.add('ajout');
+    btnAjout.innerText = "Ajouter une photo";
+    //bouton suppr
+    const btnSuppr = document.createElement('button');
+    btnSuppr.classList.add('suppression');
+    btnSuppr.innerText = "Supprimer la galerie";
+    //ajout de la méthode de suppression
+    btnSuppr.addEventListener('click', async function () {
+        document.querySelector(".gallery").innerHTML = "";
+    })
+    //ajou au DOM
+    headerTarget.appendChild(headerTitle);
+    methodTarget.appendChild(btnAjout);
+    methodTarget.appendChild(btnSuppr);
+};
+
+function galeryModalItem(article) {
+
+    //création contenu modal
+    const targetItem = document.querySelector('.picturesPlacement');
     const modalElement = document.createElement('figure');
     const divBtnImage = document.createElement('div');
     divBtnImage.classList.add('div-image');
@@ -56,10 +98,12 @@ function galeryModal(article) {
     divBtnImage.appendChild(modalImg);
     modalElement.appendChild(divBtnImage)
     modalElement.appendChild(modalTxt);
-    targetModal.appendChild(modalElement);
+    targetItem.appendChild(modalElement);
 }
 
 function genererTravaux(travaux) {
+
+    galeryModalHome();
 
     for (let i = 0; i < travaux.length; i++) {
 
@@ -82,11 +126,11 @@ function genererTravaux(travaux) {
         travauxElement.appendChild(titreElement);
 
         if (sessionStorage.getItem('TokenAuth')) {
-            galeryModal(article);
+            galeryModalItem(article);
         }
 
         modalSupprUnit.addEventListener('click', async (e) => {
-
+            //fetch pour suppr une item
             await fetch(`http://localhost:5678/api/works/${travaux[i].id}`, {
                 method: 'DELETE',
                 headers: {
@@ -98,10 +142,9 @@ function genererTravaux(travaux) {
             location.reload();
         })
 
-        const btnSuppr = document.querySelector('.suppression');
-        btnSuppr.addEventListener('click', async function () {
-            document.querySelector(".gallery").innerHTML = "";
-        })
+        //suppr de toute la gallerie
+        // const btnSuppr = document.querySelector('.suppression');
+        
     }
 }
 
@@ -124,7 +167,7 @@ function buttonFactory(listeCategories, listeTravaux) {
             const idButton = e.target.id;
 
             if (idButton === "1") {
-                console.log("Bon ça va les log un peu ??!")
+                
                 const listeObjets = listeTravaux.filter(objet => objet.categoryId === 1);
 
                 document.querySelector('.gallery').innerHTML = "";
@@ -155,6 +198,7 @@ function buttonFactory(listeCategories, listeTravaux) {
     }
 }
 
+//génération page une fois connecté
 if (sessionStorage.getItem('TokenAuth')) {
 
     elementSimuLogOut = document.querySelector('.logOutIfIn');
@@ -232,8 +276,10 @@ if (sessionStorage.getItem('TokenAuth')) {
     }
 }
 
-const btnAjout = document.querySelector('.ajout');
-btnAjout.addEventListener('click', async function modalAjout() {
+
+
+// const btnAjout = document.querySelector('.ajout');
+async function modalAjout() {
 
     const targetModalSuppr1 = document.querySelector('.header-modal');
     const targetModalSuppr2 = document.querySelector('.picturesPlacement');
@@ -247,67 +293,49 @@ btnAjout.addEventListener('click', async function modalAjout() {
     retourGalleryModal.style.visibility = "visible";
     retourGalleryModal.addEventListener('click', async (e) => {
 
-        e.stopPropagation();
+        e.stopImmediatePropagation();
 
-        document.querySelector('.header-modal').innerText = "";
-        document.querySelector('.formModal').innerHTML = "";
+        const headerClean = document.querySelector('.header-modal');
+        headerClean.innerHTML = "";
+        document.querySelector('.method-modal').innerText = "";
+        document.querySelector('.picturesPlacement').innerHTML = "";
         retourGalleryModal.style.visibility = "hidden";
 
-        const targetPics = document.querySelector('.formModal');
-        const picsReplacement = document.createElement('div');
-        picsReplacement.classList.add('picturesPlacement');
-        document.querySelector('.modal-wrapper').insertBefore(picsReplacement, targetPics);
-
-        const methodReplacement = document.createElement('div');
-        methodReplacement.classList.add('method-modal');
-        document.querySelector('.modal-wrapper').insertBefore(methodReplacement, targetPics);
-
-        methodReplacement.style.display = "flex";
-        methodReplacement.style.flexDirection = "column";
-        methodReplacement.style.alignItems = "center";
-        methodReplacement.style.marginTop = "60px";
-        methodReplacement.style.borderTop = "1px solid #b3b3b3";
-        methodReplacement.style.paddingTop = "50px";
-
-        const headTarget = document.querySelector('.header-modal');
-        const headTitle = document.createElement('p');
-        headTitle.innerText = "Galerie photo";
-        headTarget.appendChild(headTitle);
-
-        const targetMethod = document.querySelector('.method-modal');
-        const ajoutPic = document.createElement('button');
-        ajoutPic.classList.add("ajout");
-        ajoutPic.innerText = "Ajouter une photo";
-        targetMethod.appendChild(ajoutPic);
-        ajoutPic.addEventListener('click', modalAjout);
-
-        const supprGal = document.createElement('button');
-        supprGal.classList.add('suppression');
-        supprGal.innerText = "Supprimer la galerie";
-        targetMethod.appendChild(supprGal);
-
-        const fetchRetour = await fetch('http://localhost:5678/api/works');
-
-        const article = await fetchRetour.json();
-
-        console.log(article);
-
-        for (i = 0; i < article.length; i++) {
-            galeryModal(article[i]);
+        const items = await fetch('http://localhost:5678/api/works');
+        const repItems = await items.json();
+        for(let i = 0; i < repItems.length; i++){
+            const article = repItems[i]
+            //création contenu modal
+            const targetItem = document.querySelector('.picturesPlacement');
+            const modalElement = document.createElement('figure');
+            const divBtnImage = document.createElement('div');
+            divBtnImage.classList.add('div-image');
+            const modalImg = document.createElement('img');
+            modalImg.classList.add('imgModal1');
+            modalImg.src = article.imageUrl;
+            const modalFullScreenUnit = document.createElement('button');
+            modalFullScreenUnit.classList.add('btn-full-screen');
+            const modalFullScreenIcon = document.createElement('i');
+            modalFullScreenIcon.classList.add('fa-solid');
+            modalFullScreenIcon.classList.add('fa-arrows-up-down-left-right');
+            modalSupprUnit = document.createElement('button');
+            modalSupprUnit.classList.add('bouton-trash');
+            modalSupprIcon = document.createElement('i');
+            modalSupprIcon.classList.add('fa-solid');
+            modalSupprIcon.classList.add('fa-trash-can');
+            modalImg.setAttribute("crossorigin", "anonymous");
+            const modalTxt = document.createElement("figcaption");
+            modalTxt.innerText = "éditer";
+            modalSupprUnit.appendChild(modalSupprIcon);
+            modalFullScreenUnit.appendChild(modalFullScreenIcon);
+            divBtnImage.appendChild(modalFullScreenUnit);
+            divBtnImage.appendChild(modalSupprUnit);
+            divBtnImage.appendChild(modalImg);
+            modalElement.appendChild(divBtnImage)
+            modalElement.appendChild(modalTxt);
+            targetItem.appendChild(modalElement);
         }
-
-        modalSupprUnit.addEventListener('click', async (e) => {
-
-            await fetch(`http://localhost:5678/api/works/${travaux[i].id}`, {
-                method: 'DELETE',
-                headers: {
-                    "Authorization": "Bearer " + sessionStorage.getItem('TokenAuth')
-                },
-                body: travaux[i].id
-            }).then((res) => console.log(res));
-
-            location.reload();
-        })
+        galeryModalHome();
 
     })
 
@@ -491,7 +519,7 @@ btnAjout.addEventListener('click', async function modalAjout() {
             })
         }
     })
-})
+}
 
 
 
