@@ -36,7 +36,7 @@ async function connect(idForm, mdpForm){
     const tok = await reponse.json();
     tokenSession = tok.token;
     sessionStorage.setItem('TokenAuth', tokenSession);
-    console.log(tokenSession);
+    // console.log(tokenSession);
 
     const target = document.querySelector(".errorPlacement");
 

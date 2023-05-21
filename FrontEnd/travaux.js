@@ -27,13 +27,13 @@ let listWork;
 })();
 
 //ajout du listener pour modal ajout travaux et verif sur click bouton
-document.addEventListener('click', (e) =>  {
-    if(e.target.id === "ajout"){
+document.addEventListener('click', (e) => {
+    if (e.target.id === "ajout") {
         modalAjout();
     }
 })
 
-function galeryModalHome(){
+function galeryModalHome() {
     //création du header
     const headerTarget = document.querySelector('.header-modal');
     const headerTitle = document.createElement('p');
@@ -61,12 +61,17 @@ function galeryModalHome(){
     //ajout de la méthode de suppression
     btnSuppr.addEventListener('click', async function () {
         document.querySelector(".gallery").innerHTML = "";
+        document.querySelector(".picturesPlacement").innerHTML = "";
     })
+
+
     //ajou au DOM
     headerTarget.appendChild(headerTitle);
     methodTarget.appendChild(btnAjout);
     methodTarget.appendChild(btnSuppr);
 };
+
+
 
 function galeryModalItem(article) {
 
@@ -91,6 +96,69 @@ function galeryModalItem(article) {
     modalImg.setAttribute("crossorigin", "anonymous");
     const modalTxt = document.createElement("figcaption");
     modalTxt.innerText = "éditer";
+    modalSupprUnit.addEventListener('click', async (e) => {
+        //fetch pour suppr une item
+        await fetch(`http://localhost:5678/api/works/${article.id}`, {
+            method: 'DELETE',
+            headers: {
+                "Authorization": "Bearer " + sessionStorage.getItem('TokenAuth')
+            },
+            body: article.id
+        }).then(() => {
+            const modalReload = document.querySelector('.modal-wrapper');
+            modalReload.innerHTML='';
+            const IconReload = document.createElement('div');
+            IconReload.classList.add('icons-modal');
+            
+            const backBtn = document.createElement('button');
+            backBtn.classList.add('modal-back')
+            backBtn.style.visibility = "hidden"
+            const backIcon = document.createElement('i')
+            backIcon.classList.add('fa-solid')
+            backIcon.classList.add('fa-arrow-left')
+            backBtn.appendChild(backIcon)
+            IconReload.appendChild(backBtn)
+
+            const closeBtn = document.createElement('button');
+            closeBtn.addEventListener('click', () => {
+                modal.style.display = "none";
+                modal.setAttribute('aria-hidden', 'true');
+                modal.removeAttribute('aria-modal');
+            })
+            closeBtn.classList.add('modal-close')
+            const closeIcon = document.createElement('i')
+            closeIcon.classList.add('fa-solid')
+            closeIcon.classList.add('fa-xmark')
+            closeBtn.appendChild(closeIcon)
+            IconReload.appendChild(closeBtn)
+
+            const headerReload = document.createElement('div')
+            headerReload.classList.add('header-modal')
+
+            const formReload = document.createElement('div')
+            formReload.classList.add('formModal')
+            const picReload = document.createElement('div')
+            picReload.classList.add('picturesPlacement')
+            const methodReload = document.createElement('div')
+            methodReload.classList.add('method-modal')
+            formReload.appendChild(picReload)
+            formReload.appendChild(methodReload)
+
+            modalReload.appendChild(IconReload);
+            modalReload.appendChild(headerReload);
+            modalReload.appendChild(formReload);
+
+
+        fetch('http://localhost:5678/api/works')
+        .then(reponse => reponse.json())
+        //tranfert de la reponse dans la variable global
+        .then(data => {
+            genererTravaux(data)
+        })
+        });
+
+        // location.reload();
+    })
     modalSupprUnit.appendChild(modalSupprIcon);
     modalFullScreenUnit.appendChild(modalFullScreenIcon);
     divBtnImage.appendChild(modalFullScreenUnit);
@@ -104,6 +172,8 @@ function galeryModalItem(article) {
 function genererTravaux(travaux) {
 
     galeryModalHome();
+
+    document.querySelector('.gallery').innerHTML='';
 
     for (let i = 0; i < travaux.length; i++) {
 
@@ -125,32 +195,16 @@ function genererTravaux(travaux) {
         travauxElement.appendChild(imgElement);
         travauxElement.appendChild(titreElement);
 
-        if (sessionStorage.getItem('TokenAuth')) {
-            galeryModalItem(article);
+        if (sessionStorage.getItem('TokenAuth')){
+            galeryModalItem(article)
         }
-
-        modalSupprUnit.addEventListener('click', async (e) => {
-            //fetch pour suppr une item
-            await fetch(`http://localhost:5678/api/works/${travaux[i].id}`, {
-                method: 'DELETE',
-                headers: {
-                    "Authorization": "Bearer " + sessionStorage.getItem('TokenAuth')
-                },
-                body: travaux[i].id
-            }).then((res) => console.log(res));
-
-            location.reload();
-        })
-
-        //suppr de toute la gallerie
-        // const btnSuppr = document.querySelector('.suppression');
-        
     }
+
+    
 }
 
+
 function buttonFactory(listeCategories, listeTravaux) {
-
-
 
     //création du bouton 'tous'
     if (!sessionStorage.getItem('TokenAuth')) {
@@ -167,9 +221,7 @@ function buttonFactory(listeCategories, listeTravaux) {
             const idButton = e.target.id;
 
             if (idButton === "1") {
-                
                 const listeObjets = listeTravaux.filter(objet => objet.categoryId === 1);
-
                 document.querySelector('.gallery').innerHTML = "";
                 genererTravaux(listeObjets);
             } else if (idButton === "2") {
@@ -178,7 +230,6 @@ function buttonFactory(listeCategories, listeTravaux) {
                 genererTravaux(listeAppart);
             } else if (idButton === "3") {
                 const listeHotels = listeTravaux.filter(hotel => hotel.categoryId === 3);
-
                 document.querySelector('.gallery').innerHTML = "";
                 genererTravaux(listeHotels);
             } else if (idButton === "resetButton") {
@@ -303,7 +354,7 @@ async function modalAjout() {
 
         const items = await fetch('http://localhost:5678/api/works');
         const repItems = await items.json();
-        for(let i = 0; i < repItems.length; i++){
+        for (let i = 0; i < repItems.length; i++) {
             const article = repItems[i]
             //création contenu modal
             const targetItem = document.querySelector('.picturesPlacement');
@@ -326,6 +377,18 @@ async function modalAjout() {
             modalImg.setAttribute("crossorigin", "anonymous");
             const modalTxt = document.createElement("figcaption");
             modalTxt.innerText = "éditer";
+            modalSupprUnit.addEventListener('click', async (e) => {
+                //fetch pour suppr une item
+                await fetch(`http://localhost:5678/api/works/${repItems[i].id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        "Authorization": "Bearer " + sessionStorage.getItem('TokenAuth')
+                    },
+                    // body: travaux[i].id
+                }).then((res) => console.log(res));
+
+                location.reload();
+            })
             modalSupprUnit.appendChild(modalSupprIcon);
             modalFullScreenUnit.appendChild(modalFullScreenIcon);
             divBtnImage.appendChild(modalFullScreenUnit);
@@ -510,17 +573,41 @@ async function modalAjout() {
                         const errorMsg = document.createElement('p');
                         errorMsg.innerText = "Télécharger avec succès";
                         errorMsg.style.color = "green";
-                        divErrorMsg.appendChild(errorMsg);
-
-                        location.reload();
-
+                        divErrorMsg.appendChild(errorMsg); 
                     }
+                   
+                    document.querySelector('.gallery').innerHTML='';
+                    fetch('http://localhost:5678/api/works')
+                    .then(reponse => reponse.json())
+                    //tranfert de la reponse dans la variable global
+                    .then(data => {
+                        for (let i = 0; i < data.length; i++) {
+
+                            //recup du travaux en cour de traitement par la boucle
+                            const article = data[i];
+                            //recup de l'emplacement des travaux
+                            const sectionGallery = document.querySelector(".gallery");
+                            //création du conteneur général des travaux
+                            const travauxElement = document.createElement("figure");
+                            //création des balises et attribution des valeurs associés
+                            const imgElement = document.createElement("img");
+                            imgElement.src = article.imageUrl;
+                            imgElement.setAttribute("crossorigin", "anonymous");
+                            const titreElement = document.createElement("figcaption");
+                            titreElement.innerText = article.title;
+                    
+                            //attachement au DOM
+                            sectionGallery.appendChild(travauxElement);
+                            travauxElement.appendChild(imgElement);
+                            travauxElement.appendChild(titreElement);
+                        }
+                    })
+                
                 }
             })
         }
     })
 }
-
 
 
 
